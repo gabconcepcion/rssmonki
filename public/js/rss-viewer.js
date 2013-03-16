@@ -27,10 +27,8 @@ var oRssViewerHandler = {
 
 		//attach onclick event
 		var aItems = $('.rss-url-item');
-		for(var i in aItems)
+		for(var i=0, len=aItems.length; i < len; i++)
 		{
-			if (!aItems.hasOwnProperty(i)) continue;
-
 			var oItem = $(aItems[i]);
 			oItem.click({obj:this, }, this._onClickRssItem);
 		}
