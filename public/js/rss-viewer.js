@@ -40,6 +40,9 @@ var oRssViewerHandler = {
 		var obj = params.obj;
 
 		var oViewer = $('#'+this.viewer);
+		
+		$(this).parent().parent().children().removeClass('active');
+		$(this).parent().addClass('active');
 
 		$.ajax({
 			url: obj.sViewRequestUrl,
