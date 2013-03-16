@@ -16,6 +16,6 @@ class Config {
 // DB Config
 Config::write('db.host', 'localhost');
 Config::write('db.port', '');
-Config::write('db.basename', 'chat');
+Config::write('db.basename', 'rssmonki');
 Config::write('db.user', 'root');
 Config::write('db.password', '');
