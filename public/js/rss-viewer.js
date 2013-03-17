@@ -26,12 +26,28 @@ var oRssViewerHandler = {
 		oSidebar.append(aHtml.join(''));
 
 		//attach onclick event
+		this._attachOnclickEvent();
+	},
+
+	_attachOnclickEvent: function()
+	{
 		var aItems = $('.rss-url-item');
 		for(var i=0, len=aItems.length; i < len; i++)
 		{
 			var oItem = $(aItems[i]);
 			oItem.click({obj:this, }, this._onClickRssItem);
 		}
+	},
+
+	addRssSidebarLink: function(data)
+	{
+		var oSidebar = $('#'+this.sidebar);
+
+		$(oSidebar.find('ul')[0]).append('<li><a href="#" class="rss-url-item" data-rssid="'+data.id+'">'+data.title+'</a></li>');
+		this._attachOnclickEvent();
+
+		//autoclick the latest rss
+		$(oSidebar.find('ul').children().last()).children().first().click();
 	},
 
 	_onClickRssItem:function(evt)

@@ -60,10 +60,13 @@ class Rss_Model {
 
 	public function addRss($data) {
 		try {
-			$sql = "INSERT INTO rss (url) 
-					VALUES (:url)";
+			$sql = "INSERT INTO rss (title, url) 
+					VALUES (:title, :url)";
 			$stmt = $this->_oCore->_oDb->prepare($sql);
-			$stmt->bindParam(':name', $data['url'], PDO::PARAM_STR);
+			
+			$stmt->bindParam(':title', $data['title'], PDO::PARAM_STR);
+			$stmt->bindParam(':url', $data['url'], PDO::PARAM_STR);
+
 			if ($stmt->execute()) {
 				return $this->_oCore->_oDb->lastInsertId();;
 			} else {

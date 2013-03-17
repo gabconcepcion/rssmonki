@@ -11,6 +11,7 @@ var Page = {
 
 		RssSubscribe.init({
 			id: 'subscribeDialog',
+			sidebar: 'rss-sidebar',
 			triggerElem: 'subscibe-rss',
 			request_url: 'ajax-add-rss',
 			oRssViewerHandler: oRssViewerHandler,

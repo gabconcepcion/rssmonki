@@ -12,19 +12,20 @@ var RssSubscribe = {
 
 		this.id = oConfig.id;
 		this.sRequestUrl = oConfig.request_url;
-		this.oTrigger = $('#'+oConfig.triggerElem);
+		this.oAddElem = $('#'+oConfig.triggerElem);
 		this.oRssViewerHandler = oConfig.oRssViewerHandler;
+		this.sidebar = oConfig.sidebar;
 
-		if(this.oTrigger.length==0) throw 'Failed to initialize!';
+		if(this.oAddElem.length==0) throw 'Failed to initialize!';
 
-		this.oContainer = this.oTrigger.parent();
+		this.oContainer = this.oAddElem.parent();
 		this._initModal();
 	},
 	_initModal: function(){
 
 		this._sModalId = this.id+'Modal';
-		this.oTrigger.attr('data-toggle', 'modal');
-		this.oTrigger.attr('data-target', '#'+this._sModalId);
+		this.oAddElem.attr('data-toggle', 'modal');
+		this.oAddElem.attr('data-target', '#'+this._sModalId);
 
 		var sHtml = ''+
 			'<div id="'+this._sModalId+'" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="subscribeModalLabel" aria-hidden="true">'+
@@ -32,6 +33,7 @@ var RssSubscribe = {
 			'		<h3 id="'+this._sModalId+'Label">Subscribe</h3>'+
 			'	</div>'+
 			'	<div class="modal-body">'+
+			'		<p>Title: <input type="text" id="'+this._sModalId+'Title" placeholder="Title"/></p>'+
 			'		<p>Address: <input type="text" id="'+this._sModalId+'Url" placeholder="RSS link/Website url"/></p>'+
 			'	</div>'+
 			'	<div class="modal-footer">'+
@@ -48,17 +50,21 @@ var RssSubscribe = {
 	onClickSave:function(evt){
 		var params = evt.data;
 		var obj = params.obj;
+		var sTitle = $('#'+obj._sModalId+'Title').val();
 		var sUrl = $('#'+obj._sModalId+'Url').val();
+
+		var data = {
+			title: sTitle,
+			url: sUrl,
+		};
 
 		$.ajax({
 			url: obj.sRequestUrl,
 			type: "POST",
 			async:true,
-			data: {
-				url: sUrl,
-			},
+			data: data,
 			invokedata: {
-				obj: obj
+				obj: obj,
 			},
 			success: obj.onSuccess
 		});
@@ -71,6 +77,10 @@ var RssSubscribe = {
 		else
 		{
 			var obj = this.invokedata.obj;
+			var data = oResponse.data;
+
+			obj.oRssViewerHandler.addRssSidebarLink(data);
+			
 			$('#'+obj._sModalId).modal('hide');	
 			$('#'+obj._sModalId+'Url').val('');
 		}

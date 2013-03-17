@@ -12,8 +12,24 @@ $app->get('/', function () use ($app, $controller) {
 });
 
 $app->post('/ajax-add-rss',function () use ($app) {
+
+	$title =  $app->request()->params('title');
+	$url =  $app->request()->params('url');
+
+	$oRss = new Rss_Model();
+
+	$data = array(
+		'title'=>$title,
+		'url'=>$url,
+	);
+	$oRss->addRss($data);
+
+	$oCore = Core::getInstance();
+	$data['id'] = $oCore->_oDb->lastInsertId();
+
 	$aResponse = array(
 		'success'=>true,
+		'data'=>$data,
 		'message'=>''
 	);
 	$app->contentType('application/json');
