@@ -9,6 +9,20 @@ class Rss_Model {
 		//$this->_oCore->_oDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 
+	public function fetchRss($url)
+	{
+		$yql_base = 'http://query.yahooapis.com/v1/public/yql?format=json&q=';
+		$query = '
+			select * from rss where url="'.$url.'"
+		';
+
+		$result = file_get_contents($yql_base.urlencode($query));
+
+		$results = json_decode($result,true);
+
+		return $results['query']['results'];
+	}
+
 	public function getAllRss() {
 		$r = array();		
 

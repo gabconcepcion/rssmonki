@@ -36,10 +36,13 @@ var oRssViewerHandler = {
 
 	_onClickRssItem:function(evt)
 	{
+		if($(this).parent().hasClass('active')) return; 
+
 		var params = evt.data;
 		var obj = params.obj;
 
-		var oViewer = $('#'+this.viewer);
+		var oViewer = $('#'+obj.viewer);
+		oViewer.html('Loading content..');
 		
 		$(this).parent().parent().children().removeClass('active');
 		$(this).parent().addClass('active');
@@ -58,8 +61,25 @@ var oRssViewerHandler = {
 		});
 	},
 
-	onRequestRssSuccess: function()
+	onRequestRssSuccess: function(oResponse)
 	{
+		if(!oResponse.success)
+			alert(oResponse.message);
+		else
+		{
+			var obj = this.invokedata.obj;
+			var elViewer = $('#'+obj.viewer);
 
+			elViewer.html('');
+			elViewer.append('<h3>'+oResponse.aRss.title+'</h3>');
+			for(var i in oResponse.aRss.rss.item)
+			{
+				var oItem = oResponse.aRss.rss.item[i];
+				elViewer.append('<h3><a href="'+oItem.link+'" target="_blank">'+oItem.title+'</a></h3>');
+
+				if('description' in oItem)
+					elViewer.append(oItem.description);
+			}
+		}
 	},
 };

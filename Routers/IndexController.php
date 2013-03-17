@@ -14,6 +14,7 @@ $app->get('/', function () use ($app, $controller) {
 $app->post('/ajax-add-rss',function () use ($app) {
 	$aResponse = array(
 		'success'=>true,
+		'message'=>''
 	);
 	$app->contentType('application/json');
 	echo json_encode($aResponse);
@@ -21,41 +22,21 @@ $app->post('/ajax-add-rss',function () use ($app) {
 
 $app->get('/ajax-get-rss-content', function() use ($app) {
 
-	require_once('library/rss/rss_fetch.inc');
-
 	$oRss = new Rss_Model();
 
 	$id =  $app->request()->params('rss_id');
 
 	$aRss = $oRss->getRssById($id);
-	//die($aRss['url']);
-	$aRss['rss'] = fetch_rss( $aRss['url'] );
+
+	$result = $oRss->fetchRss($aRss['url']);
+	$aRss['rss'] = $result;
 
 	$aResponse = array(
 		'success'=>true,
-		'aRss'=>$aRss
+		'aRss'=>$aRss,
+		'message'=>''
 	);
 
 	$app->contentType('application/json');
 	echo json_encode($aResponse);
-});
-
-$app->get('/gab', function() use ($app) {
-
-require_once('library/rss/rss_fetch.inc');
-$url = 'http://feeds.feedburner.com/nettuts?format=xml';
-$rss = fetch_rss( $url );
-
-echo "Channel Title: " . $rss->channel['title'] . "<p>";
-echo "<ul>";
-foreach ($rss->items as $item) {
-	$href = $item['link'];
-	$title = $item['title'];
-	$description = $item['description'];
-	echo "<li><a href=$href>$title</a><br/>".
-	$description.
-	"</li>";
-}
-echo "</ul>";
-
 });
