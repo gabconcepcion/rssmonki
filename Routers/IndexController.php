@@ -13,25 +13,38 @@ $app->get('/', function () use ($app, $controller) {
 
 $app->post('/ajax-add-rss',function () use ($app) {
 
-	$title =  $app->request()->params('title');
-	$url =  $app->request()->params('url');
+	try
+	{
+		throw new Exception('This feature is temporarily disabled!');
 
-	$oRss = new Rss_Model();
+		$title =  $app->request()->params('title');
+		$url =  $app->request()->params('url');
 
-	$data = array(
-		'title'=>$title,
-		'url'=>$url,
-	);
-	$oRss->addRss($data);
+		$oRss = new Rss_Model();
 
-	$oCore = Core::getInstance();
-	$data['id'] = $oCore->_oDb->lastInsertId();
+		$data = array(
+			'title'=>$title,
+			'url'=>$url,
+		);
+		$oRss->addRss($data);
 
-	$aResponse = array(
-		'success'=>true,
-		'data'=>$data,
-		'message'=>''
-	);
+		$oCore = Core::getInstance();
+		$data['id'] = $oCore->_oDb->lastInsertId();
+
+		$aResponse = array(
+			'success'=>true,
+			'data'=>$data,
+			'message'=>''
+		);	
+	}
+	catch(Exception $e)
+	{
+		$aResponse = array(
+			'success'=>false,
+			'message'=>$e->getMessage()
+		);		
+	}
+
 	$app->contentType('application/json');
 	echo json_encode($aResponse);
 });
